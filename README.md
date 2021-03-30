@@ -1,2 +1,2 @@
 # WorkbookOperation
-Some Subs in Excel code in VBA
+Some lite tools in Excel VBA
