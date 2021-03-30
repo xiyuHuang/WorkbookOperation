@@ -1,0 +1,35 @@
+Sub 分层合并单元格()
+    Application.DisplayAlerts = False            '取消显示警告
+    
+    Dim colNum, rStart, rStop, rank As Long
+    Dim myRange As Range
+    Set myRange = Application.InputBox(prompt:="请选择需要合并的列", title:="请选择范围", Type:=8)
+    
+    colNum = myRange.Column
+    rank = myRange.Columns.Count
+    
+    rStart = 1
+    rStop = Cells(ActiveSheet.Rows.Count, myRange.Column).End(xlUp).Row
+    
+    If MsgBox(promtpt:="即将开始合并单元格，该过程不可逆，是否继续？", Buttons:=vbYesNo + vbQuestion + vbDefaultButton2) = vbYes Then
+        
+        Call rankMerge(colNum, rStart, rStop, rank)
+    End If
+    
+    Application.DisplayAlerts = True                '恢复显示警告
+    
+    
+End Sub
+
+Private Sub rankMerge(ByVal colNum, rStart, rStop, rank)
+    Dim s As Long, i As Long
+    s = rStart
+    For i = rStart To rStop + 1 Step 1
+        If Cells(i, colNum).Value <> Cells(s, colNum) Or i = rStop + 1 Then '判定合并条件：单元格内容与第一个单元格内容不同或完成整个范围的查找
+            Range(Cells(s, colNum), Cells(i - 1, colNum)).Merge             '合并相同内容单元格
+            If rank > 1 Then Call rankMerge(colNum + 1, s, i - 1, renk - 1) '对下一层进行合并
+            
+            s = i
+        End If
+    Next i
+End Sub
